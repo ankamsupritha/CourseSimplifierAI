@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LearnEase AI | Results</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body{
+            background:#f5f6fb;
+            font-family:Poppins,Arial,sans-serif;
+        }
+
+        .container{
+            width:90%;
+            max-width:1100px;
+            margin:40px auto;
+        }
+
+        .title{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .title h1{
+            color:#6b2de3;
+            margin-bottom:8px;
+        }
+
+        .filename{
+            color:#666;
+            font-size:16px;
+        }
+
+        .section{
+            background:white;
+            border-radius:15px;
+            margin-bottom:25px;
+            overflow:hidden;
+            box-shadow:0 5px 15px rgba(0,0,0,.08);
+        }
+
+        .heading{
+            background:#6b2de3;
+            color:white;
+            padding:15px 20px;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .content{
+            padding:20px;
+            font-size:17px;
+            line-height:1.8;
+            white-space:pre-wrap;
+        }
+
+        .content ul{
+            padding-left:20px;
+        }
+
+        .definition-term{
+            font-weight:bold;
+            color:#000;
+        }
+
+        .back-btn{
+            display:inline-block;
+            padding:12px 25px;
+            background:#6b2de3;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+        }
+
+        .back-btn:hover{
+            background:#5820c9;
+        }
+
+        .footer{
+            text-align:center;
+            color:#777;
+            margin-top:40px;
+            font-size:14px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">
+
+        <h1>📘 Simplified Course Content</h1>
+
+        <div class="filename">
+
+            {{ filename }}
+
+        </div>
+
+    </div>
+
+    <div id="ai-output" class="content">
+
+{{ result.summary }}
+
+    </div>
+
+    <br>
+
+    <a href="/dashboard" class="back-btn">
+
+        ← Back to Dashboard
+
+    </a>
+
+    <div class="footer">
+
+        Developed by Supritha Ankam | AICTE Internship 2026 | Powered by IBM watsonx.ai
+
+    </div>
+
+</div>
+
+<script>
+
+let txt=document.getElementById("ai-output").innerHTML;
+
+txt=txt.replace(/###/g,"");
+txt=txt.replace(/\*\*/g,"");
+txt=txt.replace(/__/g,"");
+txt=txt.replace(/```/g,"");
+txt=txt.replace(/--/g,"");
+
+txt=txt.replace(/\r/g,"");
+
+txt=txt.replace(/SUMMARY:/gi,
+"<div class='section'><div class='heading'>📘 Summary</div><div class='content'>");
+
+txt=txt.replace(/SIMPLIFIED NOTES:/gi,
+"</div></div><div class='section'><div class='heading'>📖 Simplified Notes</div><div class='content'>");
+
+txt=txt.replace(/KEY CONCEPTS:/gi,
+"</div></div><div class='section'><div class='heading'>⭐ Key Concepts</div><div class='content'>");
+
+txt=txt.replace(/DEFINITIONS:/gi,
+"</div></div><div class='section'><div class='heading'>📚 Definitions</div><div class='content'>");
+
+txt=txt.replace(/MCQS:/gi,
+"</div></div><div class='section'><div class='heading'>❓ MCQs</div><div class='content'>");
+
+txt=txt.replace(/REVISION NOTES:/gi,
+"</div></div><div class='section'><div class='heading'>📝 Revision Notes</div><div class='content'>");
+
+txt=txt.replace(/\n/g,"<br>");
+
+txt=txt.replace(/•/g,"<br>•");
+
+txt=txt.replace(
+/([A-Za-z0-9 ()\/+-]+):/g,
+function(match,p1){
+
+if(
+p1=="Question"||
+p1=="Answer"||
+p1=="Explanation"||
+p1=="A"||
+p1=="B"||
+p1=="C"||
+p1=="D"
+){
+return "<br><b>"+match+"</b>";
+}
+
+if(
+p1=="SUMMARY"||
+p1=="SIMPLIFIED NOTES"||
+p1=="KEY CONCEPTS"||
+p1=="DEFINITIONS"||
+p1=="MCQS"||
+p1=="REVISION NOTES"
+){
+return match;
+}
+
+return "<span class='definition-term'>"+p1+":</span>";
+
+}
+);
+
+txt+="</div></div>";
+
+document.getElementById("ai-output").innerHTML=txt;
+
+</script>
+
+</body>
+
+</html>

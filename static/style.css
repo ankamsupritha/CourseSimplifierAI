@@ -1,0 +1,795 @@
+/* ===========================
+   LearnEase AI
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f6f4ff;
+    color:#333;
+    transition:.3s;
+}
+
+body.dark{
+    background:#121212;
+    color:#fff;
+}
+
+a{
+    text-decoration:none;
+}
+
+/* ===========================
+LOGIN & REGISTER
+=========================== */
+
+.login-container{
+
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+
+}
+
+.login-card{
+
+    width:430px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    text-align:center;
+
+}
+
+body.dark .login-card{
+
+    background:#1e1e1e;
+
+}
+
+.login-card h1{
+
+    color:#6b2de3;
+
+    margin-bottom:10px;
+
+}
+
+.login-card h1 span{
+
+    color:#8b5cf6;
+
+}
+
+.login-card p{
+
+    color:#666;
+
+    margin-bottom:25px;
+
+}
+
+body.dark .login-card p{
+
+    color:#ccc;
+
+}
+
+.login-card input{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:18px;
+
+    border-radius:10px;
+
+    border:1px solid #d8d8d8;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+body.dark .login-card input{
+
+    background:#2b2b2b;
+
+    color:white;
+
+    border:none;
+
+}
+
+.login-card button{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    background:#6b2de3;
+
+    color:white;
+
+    font-size:16px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.login-card button:hover{
+
+    background:#5421c2;
+
+}
+
+.bottom-text{
+
+    margin-top:20px;
+
+}
+
+.bottom-text a{
+
+    color:#6b2de3;
+
+    font-weight:600;
+
+}
+
+.flash{
+
+    background:#ede5ff;
+
+    color:#6b2de3;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    margin-bottom:18px;
+
+    font-weight:500;
+
+}
+
+body.dark .flash{
+
+    background:#352061;
+
+}
+
+/* ===========================
+NAVBAR
+=========================== */
+
+nav{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 8%;
+
+    background:white;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+body.dark nav{
+
+    background:#1b1b1b;
+
+}
+
+.logo{
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.logo span{
+
+    color:#7b3ff2;
+
+}
+
+nav ul{
+
+    list-style:none;
+
+    display:flex;
+
+    gap:35px;
+
+}
+
+nav ul li a{
+
+    color:inherit;
+
+    font-weight:500;
+
+}
+
+nav ul li a:hover{
+
+    color:#7b3ff2;
+
+}
+
+.right-menu{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-weight:600;
+
+}
+
+#theme-toggle{
+
+    width:45px;
+
+    height:45px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#6b2de3;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+}
+
+/* ===========================
+WELCOME
+=========================== */
+
+.welcome{
+
+    width:90%;
+
+    margin:40px auto;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+}
+
+body.dark .welcome{
+
+    background:#1e1e1e;
+
+}
+
+.welcome h2{
+
+    color:#6b2de3;
+
+    margin-bottom:10px;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    margin-top:15px;
+
+    background:#ede5ff;
+
+    color:#6b2de3;
+
+    padding:10px 16px;
+
+    border-radius:30px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+body.dark .badge{
+
+    background:#352061;
+
+}
+
+/* ===========================
+STATISTICS
+=========================== */
+
+.stats{
+
+    width:90%;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:25px;
+
+}
+
+.stat-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+}
+
+body.dark .stat-card{
+
+    background:#1e1e1e;
+
+}
+
+.stat-card h1{
+
+    color:#6b2de3;
+
+    font-size:40px;
+
+}
+
+.stat-card p{
+
+    margin-top:10px;
+
+    color:#666;
+
+}
+
+body.dark .stat-card p{
+
+    color:#ccc;
+
+}
+
+/* ===========================
+UPLOAD CARD
+=========================== */
+
+.upload-card{
+
+    width:90%;
+
+    margin:40px auto;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+}
+
+body.dark .upload-card{
+
+    background:#1e1e1e;
+
+}
+
+/* ===========================
+FOOTER
+=========================== */
+
+footer{
+
+    margin-top:60px;
+
+    text-align:center;
+
+    padding:25px;
+
+    background:#6b2de3;
+
+    color:white;
+
+}
+
+/* ===========================
+RESPONSIVE
+=========================== */
+
+@media(max-width:768px){
+
+nav{
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+nav ul{
+
+    gap:18px;
+
+}
+
+.login-card{
+
+    width:100%;
+
+}
+
+}
+/* ===========================
+UPLOAD AREA
+=========================== */
+
+.drop-area{
+
+    border:2px dashed #8b5cf6;
+
+    border-radius:16px;
+
+    padding:40px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    background:#faf8ff;
+
+}
+
+.drop-area:hover{
+
+    background:#f3ecff;
+
+}
+
+body.dark .drop-area{
+
+    background:#262626;
+
+    border-color:#8b5cf6;
+
+}
+
+.upload-icon{
+
+    font-size:55px;
+
+    margin-bottom:15px;
+
+}
+
+.drop-area p{
+
+    font-size:18px;
+
+    font-weight:600;
+
+    margin-bottom:10px;
+
+}
+
+.drop-area span{
+
+    color:#777;
+
+}
+
+.drop-area input{
+
+    margin-top:20px;
+
+}
+
+
+/* ===========================
+FORM
+=========================== */
+
+.form-group{
+
+    margin-bottom:20px;
+
+}
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+}
+
+.form-group select{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    border:1px solid #d8d8d8;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+body.dark .form-group select{
+
+    background:#2d2d2d;
+
+    color:white;
+
+    border:none;
+
+}
+
+
+/* ===========================
+BUTTON
+=========================== */
+
+.main-btn{
+
+    width:100%;
+
+    padding:15px;
+
+    background:#6b2de3;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    margin-top:20px;
+
+    transition:.3s;
+
+}
+
+.main-btn:hover{
+
+    background:#5122ba;
+
+}
+
+
+/* ===========================
+FEATURES
+=========================== */
+
+.features{
+
+    width:90%;
+
+    margin:60px auto;
+
+}
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:25px;
+
+}
+
+.card{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:16px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+body.dark .card{
+
+    background:#1e1e1e;
+
+}
+
+.card h3{
+
+    color:#6b2de3;
+
+    margin-bottom:12px;
+
+}
+
+.card p{
+
+    color:#666;
+
+    line-height:1.6;
+
+}
+
+body.dark .card p{
+
+    color:#ccc;
+
+}
+
+
+/* ===========================
+LOGOUT BUTTON
+=========================== */
+
+.logout-btn{
+
+    background:#6b2de3;
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    transition:.3s;
+
+}
+
+.logout-btn:hover{
+
+    background:#5122ba;
+
+}
+
+
+/* ===========================
+PROFILE
+=========================== */
+
+.profile{
+
+    background:#ede5ff;
+
+    color:#6b2de3;
+
+    padding:10px 15px;
+
+    border-radius:30px;
+
+    font-weight:600;
+
+}
+
+body.dark .profile{
+
+    background:#352061;
+
+    color:white;
+
+}
+.feature-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-top:30px;
+}
+
+.feature-card{
+background:white;
+padding:20px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,.1);
+transition:.3s;
+}
+
+.feature-card:hover{
+transform:translateY(-5px);
+}
+
+.feature-card h3{
+margin:10px 0;
+color:#6a11cb;
+}
+
+.feature-card p{
+color:#666;
+font-size:15px;
+}
+.upload-btn{
+    display:inline-block;
+    background:#6b2de3;
+    color:white;
+    padding:12px 25px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.upload-btn:hover{
+    background:#5a22c7;
+}

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | LearnEase AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+        <div class="logo">
+
+            LearnEase <span>AI</span>
+
+        </div>
+
+        <ul>
+
+            <li><a href="/dashboard">Dashboard</a></li>
+
+            <li><a href="/history">History</a></li>
+
+            <li><a href="/about">About</a></li>
+
+        </ul>
+
+        <div class="right-menu">
+
+            <button id="theme-toggle">🌙</button>
+
+            <div class="profile">
+
+                👤 {{ username }}
+
+            </div>
+
+            <a href="/logout" class="logout-btn">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= WELCOME ================= -->
+
+    <section class="welcome">
+
+        <h2>
+
+            Welcome, {{ username }} !
+
+        </h2>
+
+        <p>
+
+            Transform your complex course materials into simple and easy-to-understand learning notes with LearnEase AI.
+
+        </p>
+
+        <div class="badge">
+
+            🤖 Powered by IBM watsonx Orchestrate & Mistral AI
+
+        </div>
+
+    </section>
+
+    <!-- ================= UPLOAD ================= -->
+
+    <section class="upload-card">
+
+        <h2 style="margin-bottom:25px;color:#6b2de3;">
+
+            Upload Your Files
+
+        </h2>
+
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+
+            <div class="drop-area">
+
+                <div class="upload-icon">
+
+                    📄
+
+                </div>
+
+                <p>
+
+    Drag & Drop your Study Material here
+
+</p>
+
+<span style="color:#777;font-size:14px;">
+Supports PDF, DOC, DOCX, PPT, PPTX and TXT
+</span>
+
+<br><br>
+
+
+<label for="file-upload" class="upload-btn">
+    📂 Choose Study Material
+</label>
+
+<input
+id="file-upload"
+type="file"
+name="pdf"
+accept=".pdf,.doc,.docx,.ppt,.pptx,.txt"
+required
+style="display:none;">
+
+<p id="selected-file" style="margin-top:15px;color:#6b2de3;font-weight:600;">
+No file selected
+</p>
+
+            <br>
+
+            <div class="form-group">
+
+                <label>
+
+                    Subject
+
+                </label>
+
+                <select>
+
+                    <option>Artificial Intelligence</option>
+
+                    <option>Machine Learning</option>
+
+                    <option>Cloud Computing</option>
+
+                    <option>Operating Systems</option>
+
+                    <option>DBMS</option>
+
+                    <option>Computer Networks</option>
+
+                    <option>Cyber Security</option>
+
+                    <option>Java</option>
+
+                    <option>Python</option>
+
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+            <br>
+
+            <div class="form-group">
+
+                <label>
+
+                    Simplification Level
+
+                </label>
+
+                <select>
+
+                    <option>Easy</option>
+
+                    <option selected>Medium</option>
+
+                    <option>Advanced</option>
+
+                </select>
+
+            </div>
+
+            <button type="submit" class="upload-btn">
+    ✨ Generate Smart Notes
+</button>
+
+        </form>
+        <div id="loading" style="display:none;text-align:center;padding:30px;">
+
+    <img src="https://i.gifer.com/ZZ5H.gif"
+         width="80">
+
+    <h3 style="color:#6b2de3;">
+        🤖 AI is generating your Smart Notes...
+    </h3>
+
+    <p>Please wait a few seconds.</p>
+
+</div>
+
+    </section>
+
+
+    <!-- ================= RECENT ================= -->
+
+    <section class="welcome">
+
+        <h2>
+
+            Recent Activity
+
+        </h2>
+
+        <br>
+
+        <p>
+
+            📂 No documents simplified yet.
+
+        </p>
+
+    </section>
+
+
+    <!-- ================= FEATURES ================= -->
+
+    <section class="features">
+
+        <h2 style="text-align:center;margin-bottom:35px;color:#6b2de3;">
+
+            AI Features
+
+        </h2>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>📘 Smart Summary</h3>
+
+                <p>Create concise summaries from lengthy course material.</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>📖 Simplified Notes</h3>
+
+                <p>Convert difficult concepts into easy explanations.</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>⭐ Key Concepts</h3>
+
+                <p>Automatically identify important topics.</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>📚 Definitions</h3>
+
+                <p>Extract technical terms with simple meanings.</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <div class="stat-card">
+    <h1>25+</h1>
+    <p>Documents Supported</p>
+</div>
+
+<div class="stat-card">
+    <h1>6</h1>
+    <p>AI Features</p>
+</div>
+
+<div class="stat-card">
+    <h1>4</h1>
+    <p>File Formats</p>
+</div>
+
+<div class="stat-card">
+    <h1>24×7</h1>
+    <p>AI Assistance</p>
+</div>
+
+    <footer>
+
+        © 2026 LearnEase AI
+Built using Flask • IBM watsonx.ai • Mistral AI • SQLite
+
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script>
+
+document.querySelector("form").onsubmit=function(){
+
+document.getElementById("loading").style.display="block";
+
+}
+
+</script>
+<script>
+
+const fileInput = document.getElementById("file-upload");
+const fileName = document.getElementById("selected-file");
+
+fileInput.addEventListener("change", function(){
+
+    if(this.files.length>0){
+
+        fileName.innerHTML="✅ "+this.files[0].name;
+
+    }
+
+});
+
+document.querySelector("form").addEventListener("submit",function(){
+
+    if(fileInput.files.length===0){
+
+        alert("Please choose a file.");
+
+        return false;
+
+    }
+
+    document.getElementById("loading").style.display="block";
+
+});
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>PDF Preview</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="welcome">
+
+<h2>
+
+{{ filename }}
+
+</h2>
+
+<br>
+
+<h3>
+
+Extracted Text Preview
+
+</h3>
+
+<br>
+
+<pre style="white-space:pre-wrap;font-size:15px;line-height:1.7;">
+
+{{ text }}
+
+</pre>
+
+<br>
+
+<a href="/dashboard" class="logout-btn">
+
+Back to Dashboard
+
+</a>
+
+</div>
+
+</body>
+
+</html>
