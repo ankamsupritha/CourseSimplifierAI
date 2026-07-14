@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: LearnEase AI – Course Simplifier Skill
+  description: >
+    IBM watsonx Orchestrate skill that lets the agent simplify educational
+    course content and answer student questions through a conversational interface.
+  version: "1.0.0"
+  contact:
+    name: Ankam Supritha
+    email: supritha@example.com
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+  /api/agent/chat:
+    post:
+      operationId: agentChat
+      summary: Send a message to the LearnEase AI educational agent
+      description: >
+        Accepts a user message along with optional conversation history and
+        returns the agent's educational response. The agent can summarise
+        documents, explain concepts, generate MCQs, define terms, and more.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatRequest"
+      responses:
+        "200":
+          description: Successful agent response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+        "400":
+          description: Bad request – missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/agent/simplify:
+    post:
+      operationId: simplifyText
+      summary: Simplify a block of course text
+      description: >
+        Accepts raw course-material text and returns a fully structured
+        simplification with summary, simplified notes, key concepts,
+        definitions, MCQs, and revision notes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimplifyRequest"
+      responses:
+        "200":
+          description: Structured simplification output
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimplifyResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    ConversationTurn:
+      type: object
+      required: [role, text]
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+          description: Who sent this message
+        text:
+          type: string
+          description: Message content
+
+    ChatRequest:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          description: The student's current message or question
+          example: "Can you explain what machine learning is in simple terms?"
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationTurn"
+          description: Previous turns of the conversation (oldest first)
+          default: []
+
+    ChatResponse:
+      type: object
+      properties:
+        reply:
+          type: string
+          description: The agent's response in plain text
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationTurn"
+          description: Updated conversation history including the latest exchange
+
+    SimplifyRequest:
+      type: object
+      required: [text]
+      properties:
+        text:
+          type: string
+          description: Raw course-material text to simplify (up to 10 000 characters)
+          example: "Neural networks are computing systems inspired by biological neural networks..."
+
+    SimplifyResponse:
+      type: object
+      properties:
+        summary:
+          type: string
+          description: The full structured simplification output as plain text
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error description

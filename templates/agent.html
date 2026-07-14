@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LearnEase AI | Agent Chat</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        /* ---- Page layout ---- */
+        body { background: #f6f4ff; }
+
+        .agent-wrapper {
+            width: 90%;
+            max-width: 860px;
+            margin: 40px auto 60px;
+        }
+
+        .agent-hero {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        .agent-hero h1 {
+            color: #6b2de3;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .agent-hero p {
+            color: #555;
+            font-size: 15px;
+        }
+
+        body.dark .agent-hero p { color: #bbb; }
+
+        /* ---- Chat box ---- */
+        .chat-box {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.07);
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+            margin-top: 25px;
+            overflow: hidden;
+        }
+
+        body.dark .chat-box { background: #1e1e1e; }
+
+        /* ---- Chat header ---- */
+        .chat-header {
+            background: #6b2de3;
+            color: white;
+            padding: 16px 22px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4ade80;
+            display: inline-block;
+        }
+
+        /* ---- Messages area ---- */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .msg {
+            max-width: 75%;
+            padding: 13px 17px;
+            border-radius: 14px;
+            font-size: 15px;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .msg.user {
+            background: #6b2de3;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg.assistant {
+            background: #f3ecff;
+            color: #1a1a1a;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        body.dark .msg.assistant {
+            background: #2c2c2c;
+            color: #eee;
+        }
+
+        .msg.typing {
+            background: #f3ecff;
+            color: #888;
+            align-self: flex-start;
+            font-style: italic;
+            border-bottom-left-radius: 4px;
+        }
+
+        body.dark .msg.typing { background: #2c2c2c; }
+
+        /* ---- Input row ---- */
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+            padding: 14px 18px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        body.dark .chat-input-row {
+            background: #1e1e1e;
+            border-color: #333;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 13px 16px;
+            border-radius: 10px;
+            border: 1px solid #d8d8d8;
+            outline: none;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
+            height: 50px;
+        }
+
+        body.dark #user-input {
+            background: #2b2b2b;
+            color: white;
+            border-color: #444;
+        }
+
+        #send-btn {
+            padding: 0 22px;
+            background: #6b2de3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: .3s;
+            flex-shrink: 0;
+        }
+
+        #send-btn:hover { background: #5421c2; }
+        #send-btn:disabled { background: #bbb; cursor: not-allowed; }
+
+        /* ---- Starter chips ---- */
+        .starters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .starter-chip {
+            padding: 9px 16px;
+            background: #ede5ff;
+            color: #6b2de3;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .starter-chip:hover { background: #d8caff; }
+
+        body.dark .starter-chip { background: #352061; color: #c8a8ff; }
+
+        /* ---- Clear button ---- */
+        .clear-btn {
+            display: block;
+            margin: 18px auto 0;
+            padding: 10px 22px;
+            background: transparent;
+            border: 2px solid #6b2de3;
+            color: #6b2de3;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: .3s;
+        }
+
+        .clear-btn:hover { background: #6b2de3; color: white; }
+
+        /* ---- Orchestrate badge ---- */
+        .orch-badge {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .orch-badge span {
+            background: #ede5ff;
+            color: #6b2de3;
+            padding: 5px 13px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        body.dark .orch-badge span { background: #352061; color: #c8a8ff; }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav>
+
+    <div class="logo">LearnEase <span>AI</span></div>
+
+    <ul>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/agent">Agent</a></li>
+        <li><a href="/history">History</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+
+    <div class="right-menu">
+
+        <button id="theme-toggle">🌙</button>
+
+        <div class="profile">👤 {{ username }}</div>
+
+        <a href="/logout" class="logout-btn">Logout</a>
+
+    </div>
+
+</nav>
+
+<!-- ================= AGENT ================= -->
+<div class="agent-wrapper">
+
+    <div class="agent-hero">
+
+        <h1>🤖 LearnEase AI Agent</h1>
+
+        <p>
+            Powered by IBM watsonx Orchestrate · Ask anything about your course material
+        </p>
+
+    </div>
+
+    <!-- Starter suggestions -->
+    <div class="starters">
+
+        <button class="starter-chip" data-msg="Explain machine learning in simple terms">
+            Explain machine learning
+        </button>
+
+        <button class="starter-chip" data-msg="What are the key concepts in cloud computing?">
+            Key concepts in cloud computing
+        </button>
+
+        <button class="starter-chip" data-msg="Generate 5 MCQ questions on operating systems">
+            Generate MCQs on OS
+        </button>
+
+        <button class="starter-chip" data-msg="Define what a neural network is">
+            Define neural network
+        </button>
+
+        <button class="starter-chip" data-msg="Summarise the concept of database normalization">
+            Summarise DB normalization
+        </button>
+
+    </div>
+
+    <!-- Chat container -->
+    <div class="chat-box">
+
+        <div class="chat-header">
+            <span class="status-dot"></span>
+            LearnEase AI Agent &nbsp;·&nbsp; IBM watsonx Orchestrate
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+
+            <div class="msg assistant">
+                Hello! I am your LearnEase AI Agent powered by IBM watsonx Orchestrate.
+                I can help you understand complex course material, generate summaries,
+                define terms, create MCQs, and much more.
+
+                What would you like to learn today?
+            </div>
+
+        </div>
+
+        <div class="chat-input-row">
+
+            <textarea
+                id="user-input"
+                placeholder="Ask me anything about your course..."
+                rows="1"
+            ></textarea>
+
+            <button id="send-btn" title="Send">➤</button>
+
+        </div>
+
+    </div>
+
+    <button class="clear-btn" id="clear-btn">🗑 Clear Conversation</button>
+
+    <div class="orch-badge">
+        <span>🔗 Connected to IBM watsonx Orchestrate</span>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 LearnEase AI · Built using Flask · IBM watsonx Orchestrate · Mistral AI
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script>
+
+const messagesEl = document.getElementById("chat-messages");
+const inputEl    = document.getElementById("user-input");
+const sendBtn    = document.getElementById("send-btn");
+const clearBtn   = document.getElementById("clear-btn");
+
+// Conversation history kept client-side and sent with every request
+let history = [];
+
+// ---- helpers ----
+
+function scrollBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function appendMsg(role, text) {
+    const div = document.createElement("div");
+    div.className = "msg " + role;
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    scrollBottom();
+    return div;
+}
+
+function removeEl(el) {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+}
+
+// ---- send ----
+
+async function sendMessage(text) {
+
+    text = text.trim();
+    if (!text) return;
+
+    sendBtn.disabled = true;
+    inputEl.value = "";
+
+    appendMsg("user", text);
+
+    const typingEl = appendMsg("typing", "LearnEase AI is thinking…");
+
+    try {
+
+        const res = await fetch("/api/agent/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text, history: history })
+        });
+
+        const data = await res.json();
+
+        removeEl(typingEl);
+
+        if (data.error) {
+            appendMsg("assistant", "⚠ Error: " + data.error);
+        } else {
+            appendMsg("assistant", data.reply);
+            history = data.history;
+        }
+
+    } catch (err) {
+        removeEl(typingEl);
+        appendMsg("assistant", "⚠ Network error. Please try again.");
+    }
+
+    sendBtn.disabled = false;
+    inputEl.focus();
+}
+
+// ---- event wiring ----
+
+sendBtn.addEventListener("click", () => sendMessage(inputEl.value));
+
+inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(inputEl.value);
+    }
+});
+
+clearBtn.addEventListener("click", () => {
+    history = [];
+    messagesEl.innerHTML = "";
+    appendMsg("assistant",
+        "Conversation cleared. I am ready to help you learn something new!"
+    );
+});
+
+document.querySelectorAll(".starter-chip").forEach((chip) => {
+    chip.addEventListener("click", () => sendMessage(chip.dataset.msg));
+});
+
+</script>
+
+</body>
+</html>

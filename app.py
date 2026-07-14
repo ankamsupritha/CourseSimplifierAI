@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from werkzeug.utils import secure_filename
 import sqlite3
 import os
 from services.pdf_service import extract_text
 from services.ai_service import simplify_course
+from services.agent_service import chat_with_agent
 
 app = Flask(__name__)
 app.secret_key = "learnease_secret_key"
@@ -28,6 +30,15 @@ def init_db():
         fullname TEXT,
         email TEXT UNIQUE,
         password TEXT
+    )
+    """)
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS history(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        filename TEXT,
+        notes TEXT,
+        uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
@@ -121,9 +132,21 @@ def dashboard():
 
         return redirect("/")
 
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT COUNT(*) FROM history WHERE username=?",
+        (session["user"],)
+    )
+    documents = c.fetchone()[0]
+
+    conn.close()
+
     return render_template(
         "dashboard.html",
-        username=session["user"]
+        username=session["user"],
+        documents=documents
     )
 
 
@@ -135,16 +158,31 @@ def upload():
 
     file = request.files["pdf"]
 
-    if file.filename == "":
-        flash("Please select a PDF")
+    if not file.filename:
+        flash("Please select a file")
         return redirect("/dashboard")
 
+    filename = secure_filename(file.filename)
+
     filepath = os.path.join(
-        app.config["UPLOAD_FOLDER"],
-        file.filename
-    )
+    app.config["UPLOAD_FOLDER"],
+    filename
+)
 
     file.save(filepath)
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+
+    c.execute(
+        """
+        INSERT INTO history(username, filename)
+        VALUES(?,?)
+        """,
+        (session["user"], file.filename)
+    )
+
+    conn.commit()
+    conn.close()
 
     # Save ONLY filename in session
     session["pdf_name"] = file.filename
@@ -166,6 +204,27 @@ def preview():
     extracted_text = extract_text(filepath)
 
     result = simplify_course(extracted_text)
+
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+
+    full_notes = result["summary"]
+
+    c.execute("""
+    UPDATE history
+    SET notes=?
+    WHERE id=(
+    SELECT MAX(id)
+    FROM history
+    WHERE username=?
+    )
+    """,(
+    full_notes,
+    session["user"]
+    ))
+
+    conn.commit()
+    conn.close()
 
     return render_template(
         "result.html",
@@ -199,10 +258,89 @@ def profile():
 def history():
 
     if "user" not in session:
-
         return redirect("/")
 
-    return render_template("history.html")
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT id, filename, uploaded_at
+        FROM history
+        WHERE username=?
+        ORDER BY uploaded_at DESC
+    """, (session["user"],))
+
+    history_data = c.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "history.html",
+        history_data=history_data
+    )
+
+
+@app.route("/view/<int:id>")
+def view_notes(id):
+
+    if "user" not in session:
+        return redirect("/")
+
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+
+    c.execute("""
+        SELECT filename, notes
+        FROM history
+        WHERE id=? AND username=?
+    """,(id,session["user"]))
+
+    data=c.fetchone()
+
+    conn.close()
+
+    if not data:
+        return redirect("/history")
+
+    return render_template(
+        "result.html",
+        filename=data[0],
+        result={"summary":data[1]}
+    )
+
+
+@app.route("/download/<int:id>")
+def download_notes(id):
+
+    if "user" not in session:
+        return redirect("/")
+
+    conn=sqlite3.connect(DATABASE)
+    c=conn.cursor()
+
+    c.execute("""
+        SELECT filename,notes
+        FROM history
+        WHERE id=? AND username=?
+    """,(id,session["user"]))
+
+    data=c.fetchone()
+
+    conn.close()
+
+    if not data:
+        return redirect("/history")
+
+    from flask import Response
+
+    return Response(
+        data[1],
+        mimetype="text/plain",
+        headers={
+            "Content-Disposition":
+            f"attachment; filename={data[0]}_SmartNotes.txt"
+        }
+    )
 
 
 # --------------------------
@@ -213,6 +351,82 @@ def history():
 def about():
 
     return render_template("about.html")
+
+
+# --------------------------
+# AGENT CHAT (UI)
+# --------------------------
+
+@app.route("/agent")
+def agent():
+
+    if "user" not in session:
+        return redirect("/")
+
+    return render_template("agent.html", username=session["user"])
+
+
+# --------------------------
+# AGENT CHAT (API)
+# --------------------------
+
+@app.route("/api/agent/chat", methods=["POST"])
+def api_agent_chat():
+    """
+    REST endpoint consumed by the UI and by the IBM watsonx Orchestrate skill.
+
+    Request JSON:
+        { "message": "...", "history": [{"role": "user"|"assistant", "text": "..."}] }
+
+    Response JSON:
+        { "reply": "...", "history": [...] }
+    """
+    data = request.get_json(silent=True) or {}
+    user_message = (data.get("message") or "").strip()
+
+    if not user_message:
+        return jsonify({"error": "Missing 'message' field"}), 400
+
+    history = data.get("history") or []
+
+    try:
+        reply = chat_with_agent(history, user_message)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    # Append the new exchange to history
+    updated_history = history + [
+        {"role": "user", "text": user_message},
+        {"role": "assistant", "text": reply},
+    ]
+
+    return jsonify({"reply": reply, "history": updated_history})
+
+
+@app.route("/api/agent/simplify", methods=["POST"])
+def api_agent_simplify():
+    """
+    REST endpoint that runs the full structured simplification pipeline.
+    Consumed by the IBM watsonx Orchestrate skill.
+
+    Request JSON:
+        { "text": "..." }
+
+    Response JSON:
+        { "summary": "..." }
+    """
+    data = request.get_json(silent=True) or {}
+    text = (data.get("text") or "").strip()
+
+    if not text:
+        return jsonify({"error": "Missing 'text' field"}), 400
+
+    try:
+        result = simplify_course(text)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify(result)
 
 
 # --------------------------

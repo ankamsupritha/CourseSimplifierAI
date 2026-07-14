@@ -1,13 +1,167 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>About</title>
+
+<meta charset="UTF-8">
+
+<title>LearnEase AI</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.section{
+
+background:white;
+
+padding:25px;
+
+margin:30px auto;
+
+width:90%;
+
+max-width:1100px;
+
+border-radius:12px;
+
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.heading{
+
+background:#6b2de3;
+
+color:white;
+
+padding:12px;
+
+border-radius:8px;
+
+font-size:22px;
+
+margin-bottom:20px;
+
+}
+
+.ai-output{
+
+white-space:pre-wrap;
+
+line-height:1.9;
+
+font-size:17px;
+
+}
+
+.quiz{
+
+margin:20px 0;
+
+padding:18px;
+
+border:1px solid #ddd;
+
+border-radius:10px;
+
+}
+
+.quiz label{
+
+display:block;
+
+margin:8px 0;
+
+cursor:pointer;
+
+}
+
+.check-btn{
+
+margin-top:12px;
+
+background:#6b2de3;
+
+color:white;
+
+padding:8px 18px;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.result{
+
+margin-top:12px;
+
+font-weight:bold;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h2>About LearnEase AI</h2>
+<div class="section">
 
-<p>This page will be updated later.</p>
+<h1>{{ filename }}</h1>
+
+<div class="heading">
+
+📘 Generated Smart Notes
+
+</div>
+
+<div id="ai-output" class="ai-output">
+
+{{ result.summary }}
+
+</div>
+
+<br>
+
+<a href="/dashboard" class="logout-btn">
+
+← Back
+
+</a>
+
+</div>
+
+<script>
+
+let txt=document.getElementById("ai-output").innerHTML;
+
+txt=txt.replace(/SUMMARY:/g,"<h2 style='color:#6b2de3'>📘 Summary</h2>");
+
+txt=txt.replace(/SIMPLIFIED NOTES:/g,"<h2 style='color:#6b2de3'>📖 Simplified Notes</h2>");
+
+txt=txt.replace(/KEY CONCEPTS:/g,"<h2 style='color:#6b2de3'>⭐ Key Concepts</h2>");
+
+txt=txt.replace(/DEFINITIONS:/g,"<h2 style='color:#6b2de3'>📚 Definitions</h2>");
+
+txt=txt.replace(/MCQS:/g,"<h2 style='color:#6b2de3'>❓ MCQs</h2>");
+
+txt=txt.replace(/REVISION NOTES:/g,"<h2 style='color:#6b2de3'>📝 Revision Notes</h2>");
+
+txt=txt.replace(/```/g,"");
+txt=txt.replace(/###/g,"");
+txt=txt.replace(/\*\*/g,"");
+
+txt=txt.replace(/\n/g,"<br>");
+
+document.getElementById("ai-output").innerHTML=txt;
+
+</script>
 
 </body>
+
 </html>

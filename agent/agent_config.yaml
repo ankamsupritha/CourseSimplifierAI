@@ -1,0 +1,75 @@
+# ============================================================
+# IBM watsonx Orchestrate – LearnEase AI Agent Configuration
+# ============================================================
+#
+# This file describes the agent that is imported into IBM
+# watsonx Orchestrate.  The agent uses the skills exposed by
+# the LearnEase AI Flask application (see openapi_skill.yaml).
+#
+# Import steps
+# ------------
+# 1. Open IBM watsonx Orchestrate.
+# 2. Go to  Skills & Apps → Import → OpenAPI.
+# 3. Upload  agent/openapi_skill.yaml.
+# 4. Set the server URL to your deployed application endpoint.
+# 5. Create a new Agent and attach the imported skills below.
+# ============================================================
+
+agent:
+  name: LearnEase AI Agent
+  display_name: "LearnEase AI – Course Simplifier"
+  description: >
+    An AI-powered educational agent that transforms complex course materials
+    into easy-to-understand study notes, summaries, definitions, MCQs, and
+    revision material.  Powered by IBM watsonx.ai (Mistral Small 3.1 24B).
+
+  instructions: |
+    You are LearnEase AI, an expert educational assistant.
+    Help students understand difficult course material by:
+      • Summarising documents in simple language
+      • Explaining concepts step by step
+      • Generating practice MCQ questions
+      • Defining technical terms clearly
+      • Answering follow-up questions about study content
+
+    Always respond in clear, plain English.
+    Do NOT use Markdown symbols such as **, ##, or ---.
+    Keep answers concise and student-friendly.
+
+  model:
+    provider: IBM watsonx.ai
+    model_id: mistralai/mistral-small-3-1-24b-instruct-2503
+
+  skills:
+    - operation_id: agentChat
+      display_name: Ask the Educational Agent
+      description: >
+        Send a question or message to LearnEase AI and receive an educational
+        response.  Supports multi-turn conversation history.
+      confirmation: false
+
+    - operation_id: simplifyText
+      display_name: Simplify Course Material
+      description: >
+        Submit raw course-material text and receive a structured breakdown
+        including summary, simplified notes, key concepts, definitions, MCQs,
+        and revision notes.
+      confirmation: false
+
+  capabilities:
+    - multi_turn_conversation
+    - document_understanding
+    - question_answering
+    - mcq_generation
+    - summarisation
+
+  starters:
+    - "Explain machine learning in simple terms"
+    - "Summarise this chapter for me"
+    - "Generate 5 MCQ questions on operating systems"
+    - "Define what a neural network is"
+    - "What are the key concepts in cloud computing?"
+
+  locale: en-US
+  version: "1.0.0"
+  author: "Ankam Supritha – AICTE Virtual Internship 2026"

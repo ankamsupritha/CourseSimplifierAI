@@ -1,13 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>History</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>History | LearnEase AI</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+.page-wrapper{
+width:90%;
+max-width:1000px;
+margin:50px auto;
+}
+
+.page-title{
+text-align:center;
+color:#6b2de3;
+margin-bottom:35px;
+}
+
+.history-table{
+width:100%;
+border-collapse:collapse;
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.history-table th{
+background:#6b2de3;
+color:white;
+padding:16px;
+}
+
+.history-table td{
+padding:16px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+.history-table tr:hover{
+background:#f7f2ff;
+}
+
+.action-btn{
+
+padding:8px 18px;
+
+border-radius:8px;
+
+text-decoration:none;
+
+color:white;
+
+font-weight:600;
+
+margin:3px;
+
+display:inline-block;
+
+}
+
+.view-btn{
+
+background:#6b2de3;
+
+}
+
+.download-btn{
+
+background:#28a745;
+
+}
+
+.empty-state{
+
+text-align:center;
+
+background:white;
+
+padding:50px;
+
+border-radius:12px;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<h2>History Page</h2>
+<nav>
+
+<div class="logo">
+
+LearnEase <span>AI</span>
+
+</div>
+
+<ul>
+
+<li><a href="/dashboard">Dashboard</a></li>
+<li><a href="/agent">Agent</a></li>
+<li><a href="/history">History</a></li>
+<li><a href="/about">About</a></li>
+
+</ul>
+
+<div class="right-menu">
+
+<button id="theme-toggle">🌙</button>
+
+<a href="/logout" class="logout-btn">
+
+Logout
+
+</a>
+
+</div>
+
+</nav>
+
+<div class="page-wrapper">
+
+<h1 class="page-title">
+
+📂 Uploaded Documents
+
+</h1>
+
+{% if history_data %}
+
+<table class="history-table">
+
+<tr>
+
+<th>File</th>
+
+<th>Date</th>
+
+<th>Actions</th>
+
+</tr>
+
+{% for item in history_data %}
+
+<tr>
+
+<td>📄 {{ item[1] }}</td>
+
+<td>{{ item[2] }}</td>
+
+<td>
+
+<a href="/view/{{ item[0] }}" class="action-btn view-btn">
+
+👁 View
+
+</a>
+
+<a href="/download/{{ item[0] }}" class="action-btn download-btn">
+
+⬇ Download
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<div class="empty-state">
+
+<h2>No History Available</h2>
+
+<br>
+
+<a href="/dashboard" class="logout-btn">
+
+Upload Study Material
+
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<footer>
+
+© 2026 LearnEase AI
+
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
+
 </html>

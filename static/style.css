@@ -10,7 +10,7 @@
 }
 
 body{
-    background:#f6f4ff;
+    background:#f4f4f6;
     color:#333;
     transition:.3s;
 }
@@ -297,15 +297,17 @@ WELCOME
 
     width:90%;
 
-    margin:40px auto;
+    margin:35px auto;
 
-    background:white;
+    background:#ffffff;
 
-    border-radius:18px;
+    border:1px solid #e5e5e5;
 
-    padding:35px;
+    border-radius:10px;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    padding:30px;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
 
 }
 
@@ -417,15 +419,17 @@ UPLOAD CARD
 
     width:90%;
 
-    margin:40px auto;
+    margin:35px auto;
 
-    background:white;
+    background:#ffffff;
 
-    border-radius:18px;
+    border:1px solid #e5e5e5;
 
-    padding:35px;
+    border-radius:10px;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    padding:30px;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
 
 }
 
@@ -653,13 +657,15 @@ FEATURES
 
 .card{
 
-    background:white;
+    background:#ffffff;
 
     padding:25px;
 
-    border-radius:16px;
+    border:1px solid #e6e6e6;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    border-radius:10px;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.08);
 
     transition:.3s;
 
@@ -758,11 +764,12 @@ margin-top:30px;
 }
 
 .feature-card{
-background:white;
+background:#ffffff;
 padding:20px;
-border-radius:12px;
+border:1px solid #e6e6e6;
+border-radius:10px;
 text-align:center;
-box-shadow:0 4px 10px rgba(0,0,0,.1);
+box-shadow:0 3px 8px rgba(0,0,0,.08);
 transition:.3s;
 }
 
@@ -792,4 +799,45 @@ font-size:15px;
 
 .upload-btn:hover{
     background:#5a22c7;
+}
+.history-table{
+
+width:100%;
+
+border-collapse:collapse;
+
+background:white;
+
+border-radius:10px;
+
+overflow:hidden;
+
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+.history-table th{
+
+background:#6b2de3;
+
+color:white;
+
+padding:15px;
+
+text-align:left;
+
+}
+
+.history-table td{
+
+padding:15px;
+
+border-bottom:1px solid #eee;
+
+}
+
+.history-table tr:hover{
+
+background:#f8f6ff;
+
 }

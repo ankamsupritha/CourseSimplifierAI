@@ -31,6 +31,8 @@
 
             <li><a href="/dashboard">Dashboard</a></li>
 
+            <li><a href="/agent">Agent</a></li>
+
             <li><a href="/history">History</a></li>
 
             <li><a href="/about">About</a></li>
@@ -210,27 +212,6 @@ No file selected
     </section>
 
 
-    <!-- ================= RECENT ================= -->
-
-    <section class="welcome">
-
-        <h2>
-
-            Recent Activity
-
-        </h2>
-
-        <br>
-
-        <p>
-
-            📂 No documents simplified yet.
-
-        </p>
-
-    </section>
-
-
     <!-- ================= FEATURES ================= -->
 
     <section class="features">
@@ -283,23 +264,23 @@ No file selected
     <!-- ================= STATS ================= -->
 
     <div class="stat-card">
-    <h1>25+</h1>
-    <p>Documents Supported</p>
+    <h1>{{ documents }}</h1>
+<p>Documents Uploaded</p>
 </div>
 
 <div class="stat-card">
-    <h1>6</h1>
-    <p>AI Features</p>
+    <h1>{{ documents }}</h1>
+    <p>AI Notes Generated</p>
 </div>
 
 <div class="stat-card">
-    <h1>4</h1>
-    <p>File Formats</p>
+    <h1>{{ documents }}</h1>
+    <p>Revision Notes</p>
 </div>
 
 <div class="stat-card">
-    <h1>24×7</h1>
-    <p>AI Assistance</p>
+    <h1>{{ documents * 5 }}</h1>
+    <p>Practice MCQs</p>
 </div>
 
     <footer>
