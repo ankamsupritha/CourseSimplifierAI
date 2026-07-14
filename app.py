@@ -178,14 +178,14 @@ def upload():
         INSERT INTO history(username, filename)
         VALUES(?,?)
         """,
-        (session["user"], file.filename)
+        (session["user"], filename)
     )
 
     conn.commit()
     conn.close()
 
     # Save ONLY filename in session
-    session["pdf_name"] = file.filename
+    session["pdf_name"] = filename
 
     return redirect(url_for("preview"))
 
