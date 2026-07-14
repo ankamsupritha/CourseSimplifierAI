@@ -156,20 +156,28 @@ def upload():
     if "user" not in session:
         return redirect("/")
 
-    file = request.files["pdf"]
+    file = request.files.get("pdf")
 
-    if not file.filename:
+    if file is None or not file.filename:
         flash("Please select a file")
         return redirect("/dashboard")
 
     filename = secure_filename(file.filename)
 
     filepath = os.path.join(
-    app.config["UPLOAD_FOLDER"],
-    filename
-)
+        app.config["UPLOAD_FOLDER"],
+        filename
+    )
 
     file.save(filepath)
+
+    # Extract text immediately
+    extracted_text = extract_text(filepath)
+
+    # Save extracted text in session
+    session["pdf_text"] = extracted_text
+    session["pdf_name"] = filename
+
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
 
@@ -178,14 +186,14 @@ def upload():
         INSERT INTO history(username, filename)
         VALUES(?,?)
         """,
-        (session["user"], filename)
+        (
+            session["user"],
+            filename
+        )
     )
 
     conn.commit()
     conn.close()
-
-    # Save ONLY filename in session
-    session["pdf_name"] = filename
 
     return redirect(url_for("preview"))
 
@@ -193,34 +201,27 @@ def upload():
 @app.route("/preview")
 def preview():
 
-    if "pdf_name" not in session:
+    if "pdf_text" not in session:
         return redirect("/dashboard")
 
-    filepath = os.path.join(
-        app.config["UPLOAD_FOLDER"],
-        session["pdf_name"]
-    )
-
-    extracted_text = extract_text(filepath)
-
-    result = simplify_course(extracted_text)
+    result = simplify_course(session["pdf_text"])
 
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
 
-    full_notes = result["summary"]
+    full_notes = result.get("summary", "")
 
     c.execute("""
-    UPDATE history
-    SET notes=?
-    WHERE id=(
-    SELECT MAX(id)
-    FROM history
-    WHERE username=?
-    )
-    """,(
-    full_notes,
-    session["user"]
+        UPDATE history
+        SET notes=?
+        WHERE id=(
+            SELECT MAX(id)
+            FROM history
+            WHERE username=?
+        )
+    """, (
+        full_notes,
+        session["user"]
     ))
 
     conn.commit()
